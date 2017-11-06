@@ -10,13 +10,27 @@ block('bem-photoswipe').elem('item')(
             throw new Error('option "imagesDir" isn\'t defined');
         }
 
-        const addTrailingSlash = (str) => str ? str.replace(/\/+$/, '') + '/' : '/';
+        const addTrailingSlash = (str) => {
+
+            if (!str) {
+                return '/';
+            }
+
+            return str.replace(/\/+$/, '') + '/';
+        };
 
         const imagesBaseUrl = addTrailingSlash(json.imagesBaseUrl);
         const imagesDir = addTrailingSlash(json.imagesDir);
         const imagesNames = fs.readdirSync(imagesDir);
 
-        imagesNames.sort((a, b) => a === b ? 0 : (a > b ? 1 : -1));
+        imagesNames.sort((a, b) => {
+
+            if (a === b) {
+                return 0;
+            }
+
+            return a > b ? 1 : -1;
+        });
 
         json.js = {
             items: imagesNames.map((imageName) => {
