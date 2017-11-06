@@ -1,27 +1,29 @@
 block('bem-photoswipe').elem('item')(
 
-    // TODO: predicate js not work
     def()((ctx, json) => {
-        // todo
         /* eslint-disable global-require */
         const fs = require('fs');
-        const config = require('config');
         const imageSize = require('image-size');
         /* eslint-enable global-require */
 
-        // TODO
-        const imagesDir = '/' + json.imagesDir + '/';
-        const imagesPath = config.rootPath + '/public' + imagesDir;
-        const images = fs.readdirSync(imagesPath);
+        if (!json.imagesDir) {
+            throw new Error('option "imagesDir" isn\'t defined');
+        }
 
-        images.sort((a, b) => a > b);
+        const addTrailingSlash = (str) => str ? str.replace(/\/+$/, '') + '/' : '/';
+
+        const imagesBaseUrl = addTrailingSlash(json.imagesBaseUrl);
+        const imagesDir = addTrailingSlash(json.imagesDir);
+        const imagesNames = fs.readdirSync(imagesDir);
+
+        imagesNames.sort((a, b) => a === b ? 0 : (a > b ? 1 : -1));
 
         json.js = {
-            items: images.map((image) => {
-                const size = imageSize(imagesPath + image);
+            items: imagesNames.map((imageName) => {
+                const size = imageSize(imagesDir + imageName);
 
                 return {
-                    src: imagesDir + image,
+                    src: imagesBaseUrl + imageName,
                     w: size.width,
                     h: size.height,
                 };
