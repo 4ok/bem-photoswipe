@@ -17,8 +17,6 @@ modules.define(
                 js: {
                     inited() {
                         this._pswp = this.findChildBlock(Pswp);
-
-                        console.log('$$$$$$$$$$$$$$$$$$$', this._pswp)
                     },
                 },
             },
